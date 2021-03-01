@@ -17,7 +17,7 @@ default_args = {
     'retry_delay': dt.timedelta(minutes=5)
 }
 # Using the context manager alllows you not to duplicate the dag parameter in each operator
-with DAG('S3_dag_test_v1', default_args=default_args, schedule_interval='@once') as dag:
+with DAG('S3_dag_test_v1.1', default_args=default_args, schedule_interval='@once') as dag:
 
     start_task = DummyOperator(
             task_id='dummy_start'
@@ -28,7 +28,7 @@ with DAG('S3_dag_test_v1', default_args=default_args, schedule_interval='@once')
         python_callable=upload_string_to_S3_with_hook,
         op_kwargs={
             'string_to_send': 'Hello AWS S3 from Airflow',
-            'key': 'my_S3_file.csv',
+            'key': 'my_S3_file_' + dt.datetime.now().strftime("%m/%d/%Y, %H:%M:%S") + '.txt',
             'bucket_name': 'sparklander-airflow-demo',
         })
 
